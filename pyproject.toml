@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sciglyph"
+version = "0.1.0"
+description = "Publication-quality scientific illustration in pure matplotlib - no BioRender, no Illustrator"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "Guo Cheng" }]
+keywords = ["matplotlib", "scientific-figures", "publication", "illustration",
+            "graphical-abstract", "bioinformatics", "deep-learning", "diagram"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Visualization",
+]
+dependencies = ["matplotlib>=3.5", "numpy>=1.20"]
+
+[project.urls]
+Homepage = "https://github.com/GuoCheng24/sciglyph"
+Issues = "https://github.com/GuoCheng24/sciglyph/issues"
+
+[tool.setuptools.packages.find]
+include = ["sciglyph*"]
