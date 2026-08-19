@@ -1,5 +1,7 @@
 # sciglyph
 
+[![test](https://github.com/GuoCheng24/sciglyph/actions/workflows/test.yml/badge.svg)](https://github.com/GuoCheng24/sciglyph/actions/workflows/test.yml) [![python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
 **Publication-quality scientific illustration in pure matplotlib — no BioRender, no Illustrator.**
 
 Overview figures and architecture diagrams are usually drawn by hand in a
@@ -36,10 +38,13 @@ synthetic; swap in your own numbers and the layout carries over.</sub>
 ## Install
 
 ```bash
-pip install sciglyph          # or: git clone && pip install -e .
+pip install git+https://github.com/GuoCheng24/sciglyph
 ```
 
 Only `matplotlib` and `numpy`. Nothing else.
+
+<sub>Not on PyPI yet, so the git URL above is the install line that works today.
+When it lands, `pip install sciglyph` will too.</sub>
 
 ## Quick start
 

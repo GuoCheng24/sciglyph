@@ -7,7 +7,7 @@ name = "sciglyph"
 version = "0.1.0"
 description = "Publication-quality scientific illustration in pure matplotlib - no BioRender, no Illustrator"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = { text = "MIT" }
 authors = [{ name = "Guo Cheng" }]
 keywords = ["matplotlib", "scientific-figures", "publication", "illustration",
