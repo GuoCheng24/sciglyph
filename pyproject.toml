@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sciglyph"
-version = "0.1.1"
+version = "0.1.2"
 description = "Publication-quality scientific illustration in pure matplotlib - no BioRender, no Illustrator"
 readme = "README.md"
 requires-python = ">=3.9"
