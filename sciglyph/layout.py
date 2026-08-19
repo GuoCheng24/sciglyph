@@ -12,7 +12,7 @@ by a shaded panel) is invisible to this check. Always look at the rendered PNG
 with your own eyes as the final step.
 """
 
-__all__ = ["text_collisions", "missing_glyphs", "report"]
+__all__ = ["text_collisions", "patch_collisions", "missing_glyphs", "report"]
 
 
 def missing_glyphs(fig):
@@ -36,6 +36,66 @@ def missing_glyphs(fig):
             if "missing from font" in msg:
                 out.append(msg.split(" missing from")[0].replace("Glyph ", "").strip())
     return sorted(set(out))
+
+
+def patch_collisions(fig, ax, thr=0.06, min_frac=0.004):
+    """Artwork that overlaps when it should not.
+
+    Containment is deliberately ignored. A background panel overlaps everything
+    inside it completely, and that is the layout working as intended; the same
+    is true of a label sitting on its own box. What actually breaks a figure is
+    two *sibling* shapes whose edges cross - a row of boxes laid out slightly
+    too wide, so each one bleeds into the next and covers its neighbour's text.
+
+    Text-level checks cannot see this: the strings themselves may not overlap
+    at all while one box is drawn straight over another.
+
+    Returns ``[(index_a, index_b, overlap_fraction), ...]``, worst first.
+    """
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    fw, fh = fig.canvas.get_width_height()
+    page = float(fw * fh) or 1.0
+
+    items = []
+    for i, p in enumerate(ax.patches):
+        try:
+            bb = p.get_window_extent(renderer)
+        except Exception:
+            continue
+        area = bb.width * bb.height
+        if area / page < min_frac:      # hairlines, ticks, markers
+            continue
+        # An unfilled dashed shape is an annotation - a ring drawn around the
+        # thing it refers to. Overlapping is the entire point of it, so it is
+        # excluded rather than reported every single time.
+        fc = p.get_facecolor()
+        unfilled = len(fc) > 3 and fc[3] < 0.01
+        ls = p.get_linestyle()
+        dashed = not (ls in ("solid", "-") or (isinstance(ls, tuple) and ls[1] is None))
+        if unfilled and dashed:
+            continue
+        items.append((i, bb, area, type(p).__name__))
+
+    hits = []
+    for a in range(len(items)):
+        for b in range(a + 1, len(items)):
+            ia, ba, area_a, na = items[a]
+            ib, bb_, area_b, nb = items[b]
+            dx = min(ba.x1, bb_.x1) - max(ba.x0, bb_.x0)
+            dy = min(ba.y1, bb_.y1) - max(ba.y0, bb_.y0)
+            if dx <= 0 or dy <= 0:
+                continue
+            inter = dx * dy
+            smaller = min(area_a, area_b)
+            # containment: the smaller shape sits (almost) entirely inside the
+            # larger one -> a panel and its contents, not a collision
+            if inter / smaller > 0.92:
+                continue
+            frac = inter / smaller
+            if frac > thr:
+                hits.append((f"{na}#{ia}", f"{nb}#{ib}", frac))
+    return sorted(hits, key=lambda h: -h[2])
 
 
 def text_collisions(fig, ax, thr=0.10):
@@ -75,22 +135,29 @@ def text_collisions(fig, ax, thr=0.10):
 def report(fig, ax, thr=0.10):
     """Print a human-readable collision report. Returns the number of hits."""
     hits, n = text_collisions(fig, ax, thr)
+    patches = patch_collisions(fig, ax)
     glyphs = missing_glyphs(fig)
-    print(f"[sciglyph.layout] {n} text objects")
+    print(f"[sciglyph.layout] {n} text objects, {len(ax.patches)} patches")
     if not hits:
         print("  OK - no text collisions")
     else:
         for a, b, frac in hits:
             print(f"  ! '{a}' x '{b}' overlap {frac * 100:.0f}%")
+    if patches:
+        print(f"  ! {len(patches)} pair(s) of artwork overlap without one containing "
+              f"the other:")
+        for a, b, frac in patches[:5]:
+            print(f"      {a} x {b}  ({frac * 100:.0f}% of the smaller)")
+        print("      Sibling shapes drawn over each other - check the row widths.")
     if glyphs:
         print(f"  ! {len(glyphs)} character(s) the font cannot draw - these render "
               f"as empty boxes:")
         for g in glyphs[:6]:
             print(f"      {g}")
         print("      Draw symbols instead of typing them (see arch.snowflake).")
-    print("  Note: text hidden behind artwork is not detectable here - "
-          "always eyeball the rendered figure.")
-    return len(hits) + len(glyphs)
+    print("  Note: these are geometric checks. Whether the figure actually reads "
+          "well still needs your eyes.")
+    return len(hits) + len(patches) + len(glyphs)
 
 
 if __name__ == "__main__":

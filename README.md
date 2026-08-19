@@ -102,8 +102,20 @@ It also works from the command line on any script that exposes `fig` and `ax`:
 python -m sciglyph.layout my_figure.py
 ```
 
-**It only covers text-vs-text.** Text hidden *behind artwork* is invisible to
-it — always look at the rendered PNG as the final step.
+It checks three things, each of which shipped a broken figure before it existed:
+
+| check | what it catches |
+|---|---|
+| text overlap | two labels drawn over each other |
+| **artwork overlap** | a row of boxes laid out slightly too wide, so each one covers its neighbour — the strings may not overlap at all, so text-level checks miss it entirely |
+| **missing glyphs** | a character the font cannot draw, rendered as an empty box. Symbols typed as literals (`✓`, `❄`) are the usual casualty |
+
+Two kinds of overlap are deliberately *not* reported, because they are the
+layout working: a panel containing its contents, and an unfilled dashed shape —
+a ring drawn around the thing it annotates.
+
+**These are geometric checks.** Whether the figure actually *reads* well still
+needs your eyes.
 
 ## Notes from actually shipping these figures
 
