@@ -159,6 +159,15 @@ Corrections, bug reports and feature requests all go to
 emailing: a public answer helps whoever hits the same thing next, and it is
 searchable.
 
+## Other things from the same desk
+
+Written while trying to get papers out, so they tend to be useful at the same points in that process:
+
+- [scholarcheck](https://github.com/GuoCheng24/scholarcheck) — verify that a citation actually exists, and audit a whole .bib in CI
+- [docxaudit](https://github.com/GuoCheng24/docxaudit) — find what your converter silently dropped from a .docx
+- [world-model-map](https://github.com/GuoCheng24/world-model-map) — a map of open-source world models and where their authors say they break
+- [kakeya-conjecture-lab](https://github.com/GuoCheng24/kakeya-conjecture-lab) — an interactive lab for the Kakeya conjecture, with a box-counting meter
+
 ## License
 
 MIT © Guo Cheng
