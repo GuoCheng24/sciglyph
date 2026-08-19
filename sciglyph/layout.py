@@ -12,7 +12,30 @@ by a shaded panel) is invisible to this check. Always look at the rendered PNG
 with your own eyes as the final step.
 """
 
-__all__ = ["text_collisions", "report"]
+__all__ = ["text_collisions", "missing_glyphs", "report"]
+
+
+def missing_glyphs(fig):
+    """Characters the chosen font cannot draw.
+
+    Matplotlib renders a missing character as an empty box and only mentions it
+    in a warning, which is easy to miss in a long build log and invisible in a
+    thumbnail. Symbols are the usual casualty: a snowflake, a check mark or a
+    cross typed as a literal will silently become tofu in most sans fonts.
+
+    Draw such marks instead of typing them.
+    """
+    import warnings
+
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        fig.canvas.draw()
+        out = []
+        for w in caught:
+            msg = str(w.message)
+            if "missing from font" in msg:
+                out.append(msg.split(" missing from")[0].replace("Glyph ", "").strip())
+    return sorted(set(out))
 
 
 def text_collisions(fig, ax, thr=0.10):
@@ -52,15 +75,22 @@ def text_collisions(fig, ax, thr=0.10):
 def report(fig, ax, thr=0.10):
     """Print a human-readable collision report. Returns the number of hits."""
     hits, n = text_collisions(fig, ax, thr)
+    glyphs = missing_glyphs(fig)
     print(f"[sciglyph.layout] {n} text objects")
     if not hits:
         print("  OK - no text collisions")
     else:
         for a, b, frac in hits:
             print(f"  ! '{a}' x '{b}' overlap {frac * 100:.0f}%")
+    if glyphs:
+        print(f"  ! {len(glyphs)} character(s) the font cannot draw - these render "
+              f"as empty boxes:")
+        for g in glyphs[:6]:
+            print(f"      {g}")
+        print("      Draw symbols instead of typing them (see arch.snowflake).")
     print("  Note: text hidden behind artwork is not detectable here - "
           "always eyeball the rendered figure.")
-    return len(hits)
+    return len(hits) + len(glyphs)
 
 
 if __name__ == "__main__":
