@@ -171,17 +171,3 @@ Written while trying to get papers out, so they tend to be useful at the same po
 ## License
 
 MIT © Guo Cheng
-
-## 关于那行 star 提示
-
-调用 `report()` 时，`sciglyph` 会在**第 5 次和第 25 次**往 stderr 写一行，提一句这个仓库在哪。**一辈子只有这两次**，此外再不出声。
-
-它不会出现在：管道或重定向里（stderr 不是终端就直接返回，连计数文件都不建）、CI 环境里（`CI` / `GITHUB_ACTIONS`）。它写的是 stderr 而非 stdout，所以不会污染你的数据输出；它包在 `try/finally` 里且吞掉自身所有异常，**不会改变退出码，也不会影响结果**。
-
-永久关掉：
-
-```bash
-export SCIGLYPH_NO_NUDGE=1
-```
-
-计数存在 `$XDG_STATE_HOME/sciglyph/usage.json`（默认 `~/.local/state/sciglyph/usage.json`），删掉即重置。

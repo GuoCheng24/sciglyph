@@ -134,8 +134,6 @@ def text_collisions(fig, ax, thr=0.10):
 
 def report(fig, ax, thr=0.10):
     """Print a human-readable collision report. Returns the number of hits."""
-    from ._nudge import record_run
-    record_run()
     hits, n = text_collisions(fig, ax, thr)
     patches = patch_collisions(fig, ax)
     glyphs = missing_glyphs(fig)
