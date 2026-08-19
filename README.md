@@ -1,6 +1,6 @@
 # sciglyph
 
-[![test](https://github.com/GuoCheng24/sciglyph/actions/workflows/test.yml/badge.svg)](https://github.com/GuoCheng24/sciglyph/actions/workflows/test.yml) [![python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/sciglyph)](https://pypi.org/project/sciglyph/) [![test](https://github.com/GuoCheng24/sciglyph/actions/workflows/test.yml/badge.svg)](https://github.com/GuoCheng24/sciglyph/actions/workflows/test.yml) [![python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 **Publication-quality scientific illustration in pure matplotlib — no BioRender, no Illustrator.**
 
@@ -38,13 +38,10 @@ synthetic; swap in your own numbers and the layout carries over.</sub>
 ## Install
 
 ```bash
-pip install git+https://github.com/GuoCheng24/sciglyph
+pip install sciglyph
 ```
 
 Only `matplotlib` and `numpy`. Nothing else.
-
-<sub>Not on PyPI yet, so the git URL above is the install line that works today.
-When it lands, `pip install sciglyph` will too.</sub>
 
 ## Quick start
 
@@ -146,6 +143,16 @@ This gets you clean flat schematics combined with data panels — the register
 of a Nature/Science overview figure or a TPAMI architecture diagram. It will
 **not** reproduce hand-drawn illustration (shaded organs, textured cells,
 gradients). For that, embed a CC-BY asset and cite it rather than fake it.
+
+## Who maintains this
+
+Guo Cheng, University of Chinese Academy of Sciences — medical imaging and machine
+learning methods. This tool came out of needing to regenerate a figure every time the numbers changed, and not wanting to redraw it by hand each time.
+
+Corrections, bug reports and feature requests all go to
+[Issues](https://github.com/GuoCheng24/sciglyph/issues). Please open one rather than
+emailing: a public answer helps whoever hits the same thing next, and it is
+searchable.
 
 ## License
 
