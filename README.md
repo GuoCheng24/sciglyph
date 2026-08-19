@@ -63,9 +63,14 @@ report(fig, ax)                      # catch text collisions before saving
 fig.savefig("figure.pdf", bbox_inches="tight")
 ```
 
-Run the full examples:
+That block is runnable as it stands — it saves `figure.pdf` and prints the layout
+report on the way.
+
+The two full examples behind the images above live in the repository rather than
+the wheel, so they need a clone:
 
 ```bash
+git clone https://github.com/GuoCheng24/sciglyph && cd sciglyph
 python examples/overview_figure.py    # -> gallery/overview_figure.png
 python examples/architecture.py       # -> gallery/architecture.png
 ```
