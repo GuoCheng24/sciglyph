@@ -75,6 +75,14 @@ python examples/overview_figure.py    # -> gallery/overview_figure.png
 python examples/architecture.py       # -> gallery/architecture.png
 ```
 
+## Every glyph at a glance
+
+<p align="center">
+  <img src="docs/glyph-sheet.png" width="100%">
+</p>
+
+<sub>The catalogue itself is drawn by the library — <a href="docs/glyph_sheet_figure.py">docs/glyph_sheet_figure.py</a> regenerates it, and a glyph that breaks shows up as a broken cell rather than a silently stale image.</sub>
+
 ## What's included
 
 **`sciglyph.bio`** — glyphs for Nature/Science-style overview figures:
