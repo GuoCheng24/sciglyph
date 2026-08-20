@@ -30,6 +30,6 @@ from . import arch
 
 RC = bio.RC
 
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 __all__ = ["bio", "arch", "layout", "set_canvas", "aspect",
            "text_collisions", "report", "RC", "__version__"]
