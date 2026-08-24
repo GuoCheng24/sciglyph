@@ -75,6 +75,48 @@ python examples/overview_figure.py    # -> gallery/overview_figure.png
 python examples/architecture.py       # -> gallery/architecture.png
 ```
 
+## CONSORT flows, with the arithmetic checked
+
+Every trial and most cohort papers need one, and journals require it for
+randomised trials. R has three packages for it; Python has had none, and the
+standing advice was to draw the boxes yourself in matplotlib.
+
+```python
+from sciglyph import consort
+
+fig, problems = consort.figure(
+    spine=[("Assessed for eligibility", 1327),
+           ("Enrolled", 915),
+           ("Allocated to treatment", 458),
+           ("Included in the primary analysis", 441)],
+    excluded=[[("Did not meet inclusion criteria", 289),
+               ("Declined to participate", 78),
+               ("Other reasons", 45)],
+              [("Allocated to the comparator arm", 457)],
+              [("Lost to follow-up", 11), ("Withdrew consent", 6)]],
+)
+fig.savefig("consort.pdf", bbox_inches="tight")
+```
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/GuoCheng24/sciglyph/main/gallery/consort.png" width="82%">
+</p>
+
+The reason to draw one in code is that the numbers move: you re-clean the data,
+forty patients leave the eligible set, and the figure goes stale — silently,
+because nobody re-adds the boxes by hand.
+
+So it does the thing a drawing tool can do that a drawing surface cannot. **It
+checks that the counts reconcile**, and refuses to draw a flow that does not:
+
+```console
+the flow does not reconcile — 1 step(s) do not add up:
+  step 1  'Assessed for eligibility' (1327) -> 'Enrolled' (900), excluded 367: unaccounted for 60
+Fix the counts, or pass strict=False to draw it anyway.
+```
+
+Reviewers check that addition. Failing here is cheaper than failing there.
+
 ## Every glyph at a glance
 
 <p align="center">

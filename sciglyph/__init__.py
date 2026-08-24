@@ -27,9 +27,10 @@ from ._canvas import set_canvas, aspect
 from .layout import text_collisions, report
 from . import bio
 from . import arch
+from . import consort
 
 RC = bio.RC
 
-__version__ = "0.1.4"
-__all__ = ["bio", "arch", "layout", "set_canvas", "aspect",
+__version__ = "0.2.0"
+__all__ = ["bio", "arch", "consort", "layout", "set_canvas", "aspect",
            "text_collisions", "report", "RC", "__version__"]
