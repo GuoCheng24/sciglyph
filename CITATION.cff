@@ -6,7 +6,7 @@ type: software
 authors:
   - family-names: Cheng
     given-names: Guo
-    affiliation: "University of Chinese Academy of Sciences"
+    affiliation: "Hangzhou Institute of Medicine, Chinese Academy of Sciences, Hangzhou, China; University of Chinese Academy of Sciences, Beijing, China"
     # orcid: "https://orcid.org/0000-0000-0000-0000"   # fill in before the first Zenodo release
 repository-code: "https://github.com/GuoCheng24/sciglyph"
 license: MIT
