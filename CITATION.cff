@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If this was useful in your work, please cite it."
+title: "sciglyph: publication figures as code"
+abstract: "Publication-quality scientific illustration in pure matplotlib. Draws CONSORT participant-flow diagrams with the counts reconciled before anything is rendered, and provides schematic glyphs for overview figures and architecture diagrams, so a figure regenerates when the numbers change instead of going silently stale."
+type: software
+authors:
+  - family-names: Cheng
+    given-names: Guo
+    affiliation: "University of Chinese Academy of Sciences"
+    # orcid: "https://orcid.org/0000-0000-0000-0000"   # fill in before the first Zenodo release
+repository-code: "https://github.com/GuoCheng24/sciglyph"
+license: MIT
+version: 0.2.0
+keywords:
+  - "matplotlib"
+  - "scientific figures"
+  - "CONSORT"
+  - "clinical trial"
+  - "reproducible research"
+  - "graphical abstract"
+  - "publication figures"

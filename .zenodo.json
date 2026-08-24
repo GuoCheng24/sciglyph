@@ -1,0 +1,22 @@
+{
+  "title": "sciglyph: publication figures as code",
+  "description": "Publication-quality scientific illustration in pure matplotlib. Draws CONSORT participant-flow diagrams with the counts reconciled before anything is rendered, and provides schematic glyphs for overview figures and architecture diagrams, so a figure regenerates when the numbers change instead of going silently stale.",
+  "upload_type": "software",
+  "license": "mit",
+  "creators": [
+    {
+      "name": "Cheng, Guo",
+      "affiliation": "University of Chinese Academy of Sciences"
+    }
+  ],
+  "keywords": [
+    "matplotlib",
+    "scientific figures",
+    "CONSORT",
+    "clinical trial",
+    "reproducible research",
+    "graphical abstract",
+    "publication figures"
+  ],
+  "access_right": "open"
+}
