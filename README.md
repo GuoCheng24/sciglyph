@@ -35,6 +35,46 @@ synthetic; swap in your own numbers and the layout carries over.</sub>
 | Vector output | ~ depends on export | ✓ PDF/SVG with editable text |
 | Cost | subscription | free, MIT |
 
+## Would an AI just write this for you?
+
+For a one-off figure, often yes, and faster — you describe it, you get a script,
+you move on. If that is the whole job, do that.
+
+What no model can do is look at what it drew. Drawing has a second half, and it
+is the half that fails silently:
+
+```python
+ax.add_patch(Circle((.2, .5), .06))     # on a 12 x 3.2 canvas
+```
+
+That is what a from-scratch script writes, and it is what almost every model
+writes, because it is what the matplotlib docs show. It renders 216 x 58 px — an
+ellipse stretched nearly four to one. Nothing raises an error. The script ran
+fine.
+
+This library is the other half. Its primitives already carry the aspect
+correction; `report()` measures the drawn figure and names overlapping labels
+and characters your submission font cannot render; `consort.figure()` refuses to
+draw participant counts that do not add up.
+
+The honest evidence is the author's own. Every figure in this repository was
+drawn with these tools, and building them still produced: two circles that came
+out as ellipses, a DNA helix sitting on top of its own caption, an emoji that
+became a tofu box, and two labels overlapping at 69%. The checks caught the last
+two. Rendering the image and looking at it caught the rest — which is the honest
+ceiling here, and why `report()` prints a line saying so.
+
+So the two are not alternatives. Have your agent install this and call the
+checks before it saves:
+
+```python
+from sciglyph import bio, arch, set_canvas, report, RC
+plt.rcParams.update(RC)
+set_canvas(fig)          # the correction a from-scratch script omits
+...
+report(fig, ax)          # then look at the PNG anyway
+```
+
 ## Install
 
 ```bash
