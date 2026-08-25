@@ -7,7 +7,7 @@ authors:
   - family-names: Cheng
     given-names: Guo
     affiliation: "Hangzhou Institute of Medicine, Chinese Academy of Sciences, Hangzhou, China; University of Chinese Academy of Sciences, Beijing, China"
-    # orcid: "https://orcid.org/0000-0000-0000-0000"   # fill in before the first Zenodo release
+    orcid: "https://orcid.org/0009-0006-7813-0114"
 repository-code: "https://github.com/GuoCheng24/sciglyph"
 license: MIT
 version: 0.2.0
