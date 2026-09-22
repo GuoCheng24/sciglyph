@@ -74,6 +74,21 @@ def audit(fig, ax, ground, panels=(), chrome=(), min_ratio=4.5, verbose=True):
                 f"contrast {ratio:.1f}:1 (needs {need}:1) for {s[:36]!r} on {bg}")
 
         declared = any(x0 <= cx <= x1 and y0 <= cy <= y1 for x0, y0, x1, y1, _ in panels)
+
+        # Rules and plotted lines are Line2D, not patches, so the artwork check above never
+        # saw them: a chart's column headers sat across the card's own separator rule and
+        # every check reported clean.
+        for ln in ax.lines:
+            xs, ys = ln.get_xdata(), ln.get_ydata()
+            if len(xs) < 2 or ln.get_linestyle() == "None":
+                continue
+            lx0, lx1 = min(xs) * 100, max(xs) * 100
+            ly0, ly1 = min(ys) * 100, max(ys) * 100
+            if ly1 - ly0 > 8:                      # only near-horizontal rules
+                continue
+            if box.x0 < lx1 and box.x1 > lx0 and box.y0 < ly1 + 4 and box.y1 > ly0 - 4:
+                problems.append(f"{s[:32]!r} sits across a rule at y={ly0 / 100:.2f}")
+                break
         # Text on top of filled artwork the caller did not declare. The 128-tile grid on one
         # card was drawn as patches, so every check passed while a headline sat on top of it.
         for pt in (() if declared else ax.patches):
