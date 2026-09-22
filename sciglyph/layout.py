@@ -98,37 +98,58 @@ def patch_collisions(fig, ax, thr=0.06, min_frac=0.004):
     return sorted(hits, key=lambda h: -h[2])
 
 
-def text_collisions(fig, ax, thr=0.10):
+def text_collisions(fig, ax, thr=0.10, glyphs=0.5):
     """Return ``([(text_a, text_b, overlap_fraction), ...], n_text_objects)``.
 
-    Overlap is measured as the intersection area divided by the area of the
-    *smaller* of the two text boxes, so a small label swallowed by a big title
-    is reported at close to 1.0.
+    Two tests, because one of them has a blind spot exactly where real layouts
+    break.
+
+    **Area.** Intersection divided by the area of the *smaller* box, so a small
+    label swallowed by a big title is reported at close to 1.0.
+
+    **Buried glyphs.** The area test is a ratio whose denominator is a whole
+    string, so two long labels colliding at their ends score near zero however
+    unreadable they are: a real case of 16.5 px of overlap -- one and a half
+    characters of one label sitting on top of the other -- scored 6.5% and was
+    reported as clean. That is the most common way a figure actually breaks, so
+    a pair is also reported when the horizontal overlap buries at least
+    ``glyphs`` characters of the narrower font and the boxes share at least a
+    third of the shorter one's height.
 
     Parameters
     ----------
     fig, ax : matplotlib Figure and Axes
     thr : float
         Report a pair when the overlap fraction exceeds this value.
+    glyphs : float
+        Report a pair when the horizontal overlap is at least this many
+        characters wide. Set to ``float("inf")`` for the area test alone.
     """
     fig.canvas.draw()  # bounding boxes do not exist before the first draw
     renderer = fig.canvas.get_renderer()
-    items = [
-        (t.get_text().replace("\n", "/")[:26], t.get_window_extent(renderer))
-        for t in ax.texts
-        if t.get_text().strip()
-    ]
+    items = []
+    for t in ax.texts:
+        raw = t.get_text()
+        if not raw.strip():
+            continue
+        box = t.get_window_extent(renderer)
+        # mean advance width of this string, the unit a reader notices
+        width_per_char = box.width / max(len(raw.strip()), 1)
+        items.append((raw.replace("\n", "/")[:26], box, width_per_char))
     hits = []
     for i in range(len(items)):
         for j in range(i + 1, len(items)):
-            (name_a, box_a), (name_b, box_b) = items[i], items[j]
+            (name_a, box_a, w_a), (name_b, box_b, w_b) = items[i], items[j]
             dx = min(box_a.x1, box_b.x1) - max(box_a.x0, box_b.x0)
             dy = min(box_a.y1, box_b.y1) - max(box_a.y0, box_b.y0)
-            if dx > 0 and dy > 0:
-                smaller = min(box_a.width * box_a.height, box_b.width * box_b.height)
-                frac = dx * dy / max(smaller, 1e-9)
-                if frac > thr:
-                    hits.append((name_a, name_b, frac))
+            if dx <= 0 or dy <= 0:
+                continue
+            smaller = min(box_a.width * box_a.height, box_b.width * box_b.height)
+            frac = dx * dy / max(smaller, 1e-9)
+            buried = (dx >= glyphs * min(w_a, w_b)
+                      and dy >= 0.33 * min(box_a.height, box_b.height))
+            if frac > thr or buried:
+                hits.append((name_a, name_b, frac))
     return sorted(hits, key=lambda h: -h[2]), len(items)
 
 

@@ -29,6 +29,55 @@ class TestTextCollisions:
         assert n == 2
         assert hits, "two labels drawn on the same spot must be reported"
 
+    @staticmethod
+    def _ends_overlapping(fig, ax, glyph_overlap=1.2):
+        """Two long labels whose ends bury `glyph_overlap` characters.
+
+        Positioned by measuring the first label rather than by a hard-coded
+        coordinate, so the case is the same one on any machine's default font.
+        """
+        left = "measured on the full set, thinking off"
+        right = "and again on a rerun of the same batch"
+        a = ax.text(0.5, 3.0, left, fontsize=18)
+        fig.canvas.draw()
+        box = a.get_window_extent(fig.canvas.get_renderer())
+        per_char = box.width / len(left)
+        ax.text((box.x1 - glyph_overlap * per_char) / 100.0, 3.0, right, fontsize=18)
+        return left, right
+
+    def test_long_labels_touching_at_their_ends_are_reported(self):
+        """The case the area test alone was blind to.
+
+        Two long strings colliding at their ends bury real characters while
+        scoring near zero on intersection-over-smaller-area, because the
+        denominator is a whole string. The measured case that prompted this:
+        16.5 px of overlap, one and a half characters buried, 6.5% by area,
+        reported as clean.
+        """
+        fig, ax = fig_ax(12.8, 6.4)
+        ax.set_xlim(0, 12.8); ax.set_ylim(0, 6.4)
+        self._ends_overlapping(fig, ax)
+        hits, _ = text_collisions(fig, ax)
+        assert hits, "an overlap that buries a character must be reported"
+        assert hits[0][2] < 0.10, (
+            "this pair is below the area threshold - it is the glyph test that "
+            "has to catch it, and the test is worthless if the area test fires too")
+
+    def test_glyph_test_can_be_switched_off(self):
+        fig, ax = fig_ax(12.8, 6.4)
+        ax.set_xlim(0, 12.8); ax.set_ylim(0, 6.4)
+        self._ends_overlapping(fig, ax)
+        hits, _ = text_collisions(fig, ax, glyphs=float("inf"))
+        assert not hits, "glyphs=inf must fall back to the area test alone"
+
+    def test_a_hair_of_overlap_is_not_a_collision(self):
+        """Boxes that graze each other by a fraction of a character are fine."""
+        fig, ax = fig_ax(12.8, 6.4)
+        ax.set_xlim(0, 12.8); ax.set_ylim(0, 6.4)
+        self._ends_overlapping(fig, ax, glyph_overlap=0.2)
+        hits, _ = text_collisions(fig, ax)
+        assert not hits, "a graze of a fifth of a character must not be reported"
+
     def test_silent_on_separated_labels(self):
         fig, ax = fig_ax()
         ax.text(.05, .9, "left", fontsize=8)
