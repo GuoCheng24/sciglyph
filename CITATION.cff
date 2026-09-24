@@ -10,7 +10,7 @@ authors:
     orcid: "https://orcid.org/0009-0006-7813-0114"
 repository-code: "https://github.com/GuoCheng24/sciglyph"
 license: MIT
-version: 0.2.1
+version: 0.2.2
 keywords:
   - "matplotlib"
   - "scientific figures"

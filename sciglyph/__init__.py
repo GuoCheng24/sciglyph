@@ -30,7 +30,7 @@ from . import consort
 
 RC = bio.RC
 
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 __all__ = ["bio", "arch", "consort", "layout", "set_canvas", "aspect",
            "text_collisions", "report", "RC", "__version__"]
 
