@@ -164,3 +164,31 @@ class TestCanvas:
         fig.canvas.draw()
         bb = c.get_window_extent()
         assert abs(bb.width / bb.height - 1.0) < 0.02
+
+
+def test_the_readme_command_runs_without_a_runtime_warning():
+    """`python -m sciglyph.layout` opened with a RuntimeWarning on every run, and
+    `--help` was treated as the name of a figure script."""
+    import os
+    import subprocess
+    import sys
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    r = subprocess.run([sys.executable, "-W", "error::RuntimeWarning", "-m", "sciglyph.layout", "--help"],
+                       cwd=root, capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    assert "usage: python -m sciglyph.layout" in r.stdout
+
+
+def test_the_package_level_names_still_import():
+    """Making layout lazy first recursed forever on `from sciglyph import report`,
+    and every test here imported sciglyph.layout directly, so none noticed."""
+    import os
+    import subprocess
+    import sys
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    code = ("from sciglyph import report, text_collisions, layout, bio, arch, consort, "
+            "set_canvas, RC; import sciglyph; "
+            "missing = [n for n in sciglyph.__all__ if not hasattr(sciglyph, n)]; "
+            "assert not missing, missing; assert report.__module__ == 'sciglyph.layout'")
+    r = subprocess.run([sys.executable, "-c", code], cwd=root, capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr[-800:]

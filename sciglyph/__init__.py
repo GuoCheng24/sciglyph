@@ -24,7 +24,6 @@ Quick start::
 """
 
 from ._canvas import set_canvas, aspect
-from .layout import text_collisions, report
 from . import bio
 from . import arch
 from . import consort
@@ -34,3 +33,17 @@ RC = bio.RC
 __version__ = "0.2.1"
 __all__ = ["bio", "arch", "consort", "layout", "set_canvas", "aspect",
            "text_collisions", "report", "RC", "__version__"]
+
+
+def __getattr__(name):
+    # layout is imported on first use rather than here. Imported eagerly, it was
+    # already in sys.modules when `python -m sciglyph.layout` ran it again as
+    # __main__, and every run of the README's own command opened with a
+    # RuntimeWarning about unpredictable behaviour.
+    if name in ("layout", "text_collisions", "report"):
+        # import_module, not `from . import layout`: the from-import asks this
+        # very function for "layout" and recurses without end.
+        import importlib
+        _layout = importlib.import_module(".layout", __name__)
+        return _layout if name == "layout" else getattr(_layout, name)
+    raise AttributeError(f"module 'sciglyph' has no attribute {name!r}")

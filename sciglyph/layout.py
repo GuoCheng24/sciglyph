@@ -185,9 +185,13 @@ if __name__ == "__main__":
     import sys
     import runpy
 
+    usage = ("usage: python -m sciglyph.layout <figure_script.py>  "
+             "(the script must expose `fig` and `ax` at module level)")
     if len(sys.argv) < 2:
-        sys.exit("usage: python -m sciglyph.layout <figure_script.py>  "
-                 "(the script must expose `fig` and `ax` at module level)")
+        sys.exit(usage)
+    if sys.argv[1] in ("-h", "--help"):
+        print(usage)
+        sys.exit(0)
     ns = runpy.run_path(sys.argv[1])
     if "fig" not in ns or "ax" not in ns:
         sys.exit("script does not expose `fig` / `ax` at module level")
