@@ -125,11 +125,11 @@ standing advice was to draw the boxes yourself in matplotlib.
 from sciglyph import consort
 
 fig, problems = consort.figure(
-    spine=[("Assessed for eligibility", 1327),
+    spine=[("Assessed for eligibility", 1240),
            ("Enrolled", 915),
            ("Allocated to treatment", 458),
            ("Included in the primary analysis", 441)],
-    excluded=[[("Did not meet inclusion criteria", 289),
+    excluded=[[("Did not meet inclusion criteria", 202),
                ("Declined to participate", 78),
                ("Other reasons", 45)],
               [("Allocated to the comparator arm", 457)],
@@ -151,7 +151,7 @@ checks that the counts reconcile**, and refuses to draw a flow that does not:
 
 ```console
 the flow does not reconcile — 1 step(s) do not add up:
-  step 1  'Assessed for eligibility' (1327) -> 'Enrolled' (900), excluded 367: unaccounted for 60
+  step 1  'Assessed for eligibility' (1240) -> 'Enrolled' (900), excluded 280: unaccounted for 60
 Fix the counts, or pass strict=False to draw it anyway.
 ```
 

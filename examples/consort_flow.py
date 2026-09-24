@@ -12,14 +12,14 @@ from sciglyph import consort, set_canvas, RC
 plt.rcParams.update(RC)
 
 SPINE = [
-    ("Assessed for eligibility", 1327),
+    ("Assessed for eligibility", 1240),
     ("Enrolled", 915),
-    ("Allocated to neoadjuvant chemoimmunotherapy", 458),
+    ("Allocated to the intervention arm", 458),
     ("Included in the primary analysis", 441),
 ]
 
 EXCLUDED = [
-    [("Did not meet inclusion criteria", 289),
+    [("Did not meet inclusion criteria", 202),
      ("Declined to participate", 78),
      ("Other reasons", 45)],
     [("Allocated to the comparator arm", 457)],
@@ -35,9 +35,9 @@ print("saved gallery/consort.png")
 
 # What it does when the numbers stop adding up — the reason to draw this in
 # code rather than in PowerPoint, where a stale count is silent.
-broken = [("Assessed for eligibility", 1327), ("Enrolled", 900)]
+broken = [("Assessed for eligibility", 1240), ("Enrolled", 900)]
 try:
-    consort.figure(broken, [[("Did not meet inclusion criteria", 289),
+    consort.figure(broken, [[("Did not meet inclusion criteria", 202),
                             ("Declined to participate", 78)]])
 except consort.ConsortError as e:
     print("\nrefused to draw:\n%s" % e)
